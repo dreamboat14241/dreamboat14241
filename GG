@@ -1,0 +1,64 @@
+import pygame
+import random
+
+# Initialize Pygame
+pygame.init()
+
+# Set up the game window
+window_width = 800
+window_height = 600
+window = pygame.display.set_mode((window_width, window_height))
+pygame.display.set_caption("Racing Game")
+
+# Define colors
+BLACK = (0, 0, 0)
+WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+GREEN = (0, 255, 0)
+BLUE = (0, 0, 255)
+
+# Set up the player's car
+player_car_width = 60
+player_car_height = 100
+player_car_x = window_width // 2 - player_car_width // 2
+player_car_y = window_height - player_car_height - 20
+player_car_speed = 5
+player_car_color = RED
+
+# Set up the enemy cars
+enemy_car_width = 60
+enemy_car_height = 100
+enemy_car_x = random.randint(0, window_width - enemy_car_width)
+enemy_car_y = -enemy_car_height
+enemy_car_speed = 3
+enemy_car_color = BLUE
+
+clock = pygame.time.Clock()
+
+game_over = False
+
+while not game_over:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            game_over = True
+
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT] and player_car_x > 0:
+        player_car_x -= player_car_speed
+    if keys[pygame.K_RIGHT] and player_car_x < window_width - player_car_width:
+        player_car_x += player_car_speed
+
+    window.fill(BLACK)
+
+    pygame.draw.rect(window, player_car_color, (player_car_x, player_car_y, player_car_width, player_car_height))
+    pygame.draw.rect(window, enemy_car_color, (enemy_car_x, enemy_car_y, enemy_car_width, enemy_car_height))
+
+    enemy_car_y += enemy_car_speed
+    if enemy_car_y > window_height:
+        enemy_car_x = random.randint(0, window_width - enemy_car_width)
+        enemy_car_y = -enemy_car_height
+
+    pygame.display.update()
+    clock.tick(60)
+
+pygame.quit()
